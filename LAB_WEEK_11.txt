@@ -1,0 +1,50 @@
+LAB_WEEK_11
+
+Marvel Kevin Nathanael
+00000108042
+
+1. When a user takes a picture, that picture is stored in a path based on the given URI. In which part of the code handles this? (Copy that part of the code as the answer)
+
+Bagian kode yang menangani definisi jalur penyimpanan ini terletak pada file file_provider_paths.xml
+
+file_provider_paths.xml
+
+<?xml version="1.0" encoding="utf-8"?>
+<paths>
+    <external-path
+        name="photos"
+        path="Android/data/com.example.lab_week_11_b/files/Pictures" />
+    <external-path
+        name="videos"
+        path="Android/data/com.example.lab_week_11_b/files/Movies" />
+</paths>
+
+2. In your FileInfo.kt, there are 5 attributes. On the first attribute, what does the URI refer to? And on the fourth attribute, what does relativePath refer to?
+
+URI: Atribut ini merujuk pada pengenal sementara dan aman yang dihasilkan oleh FileProvider. URI ini berfungsi sebagai alamat akses yang diberikan kepada aplikasi Kamera eksternal agar dapat menyimpan hasil foto ke lokasi file spesifik yang telah ditentukan aplikasi kita, tanpa perlu mengekspos jalur sistem file (file path) yang mentah dan sensitif
+
+relativePath: Atribut ini merujuk pada nama folder atau struktur direktori tempat file media tersebut akan disusun di dalam penyimpanan bersama (Shared Storage atau MediaStore) perangkat, misalnya ke dalam folder "Pictures" atau "Movies" agar bisa terbaca oleh galeri
+
+3. [Bonus] Explain the chronological order from when a user takes a picture until the file is stored in the MediaStore.
+
+
+Generate URI: Saat tombol foto ditekan, MainActivity memanggil ProviderFileManager.generatePhotoUri. Fungsi ini membuat file kosong di penyimpanan eksternal privat aplikasi dan menghasilkan sebuah URI content:// yang aman menggunakan FileProvider .
+
+Launch Camera: takePictureLauncher meluncurkan aplikasi kamera bawaan dengan intent, menyertakan URI yang baru dibuat tadi sebagai instruksi lokasi penyimpanan foto.
+
+Capture & Return: Pengguna mengambil foto; aplikasi kamera menyimpan data gambar ke URI tersebut. Setelah selesai, aplikasi kamera mengirimkan sinyal sukses (result) kembali ke MainActivity .
+
+Insert to Store: Menerima sinyal sukses, MainActivity memanggil providerFileManager.insertImageToStore. Fungsi ini menyiapkan metadata gambar (seperti nama file, tipe MIME, dan relative path) menggunakan bantuan MediaContentHelper .
+
+Copy File: ProviderFileManager mendaftarkan entri baru ke Android MediaStore. Terakhir, ia menyalin data fisik dari file sementara (yang diakses via FileProvider) ke lokasi permanen di MediaStore menggunakan stream (InputStream ke OutputStream), sehingga foto tersebut muncul di aplikasi Galeri .
+
+
+
+
+
+
+
+
+
+
+
